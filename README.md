@@ -56,7 +56,7 @@ models/
 
 1. Clone the repository:
 
-   git clone https://github.com/YOUR_USERNAME/student-management-system.git
+   git clone https://github.com/eswari-patcheappin/student-management-system.git
 
 2. Open the project:
 
@@ -96,7 +96,7 @@ models/
 
 ## Author
 
-YOUR_NAME
+Eswari Patcheappin
 
 ## License
 
