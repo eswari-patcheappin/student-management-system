@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Student Management System
 
-First, run the development server:
+A full-stack Student Management System developed using Next.js, TypeScript, MongoDB, and Mongoose.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+- Dashboard displaying total students
+- View student records in a table
+- Add new students with form validation
+- Edit existing student information
+- Delete students with confirmation
+- Search students by name
+- Filter students by department
+- Loading, success, and error messages
+- Responsive student management interface
+
+## Technologies Used
+
+- Next.js 16
+- React
+- TypeScript
+- MongoDB Atlas
+- Mongoose
+- CSS
+
+## Project Structure
+
+```text
+app/
+  api/
+    students/
+      route.ts
+      [id]/
+        route.ts
+  students/
+    add/
+      page.tsx
+    edit/
+      [id]/
+        page.tsx
+    page.tsx
+  page.tsx
+
+components/
+  StudentTable.tsx
+
+lib/
+  mongodb.ts
+
+models/
+  Student.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   git clone https://github.com/YOUR_USERNAME/student-management-system.git
 
-## Learn More
+2. Open the project:
 
-To learn more about Next.js, take a look at the following resources:
+   cd student-management-system
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   npm install
 
-## Deploy on Vercel
+4. Create a `.env.local` file in the project root:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   MONGODB_URI=your_mongodb_connection_string
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Start the development server:
+
+   npm run dev
+
+6. Open http://localhost:3000
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/students | Fetch all students |
+| POST | /api/students | Add a student |
+| GET | /api/students/:id | Fetch a student |
+| PUT | /api/students/:id | Update a student |
+| DELETE | /api/students/:id | Delete a student |
+
+## Student Fields
+
+- Name
+- Email
+- Phone Number
+- Department
+- Academic Year
+
+## Author
+
+YOUR_NAME
+
+## License
+
+Created for educational purposes.
