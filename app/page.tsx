@@ -1,69 +1,261 @@
-import Image from "next/image";
+
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+
+interface Student {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  department: string;
+  year: number;
+}
 
 export default function Home() {
+  const [students, setStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchDashboard() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch("/api/students");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch students");
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(
+            data.message || "Failed to fetch students"
+          );
+        }
+
+        setStudents(data.students);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Something went wrong"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboard();
+  }, []);
+
+  const cellStyle = {
+    padding: "14px 20px",
+    textAlign: "left" as const,
+    borderBottom: "1px solid #e5e7eb",
+    color: "#111827",
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main
+      style={{
+        minHeight: "100vh",
+        padding: "32px",
+        backgroundColor: "#f9fafb",
+      }}
+    >
+      {/* Dashboard Header */}
+      <h1
+        style={{
+          fontSize: "32px",
+          fontWeight: "bold",
+          color: "#111827",
+          marginBottom: "12px",
+        }}
+      >
+        Student Management Dashboard
+      </h1>
+
+      <p
+        style={{
+          color: "#6b7280",
+          marginBottom: "30px",
+        }}
+      >
+        Welcome to the Student Management System.
+      </p>
+
+      {/* Total Students Card */}
+      <div
+        style={{
+          backgroundColor: "#ffffff",
+          border: "1px solid #e5e7eb",
+          borderRadius: "12px",
+          padding: "24px",
+          maxWidth: "320px",
+          marginBottom: "30px",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "18px",
+            color: "#4b5563",
+            marginBottom: "12px",
+          }}
+        >
+          Total Students
+        </h2>
+
+        {loading ? (
+          <p style={{ color: "#6b7280" }}>
+            Loading...
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        ) : error ? (
+          <p style={{ color: "#dc2626" }}>
+            Unable to load students
+          </p>
+        ) : (
+          <p
+            style={{
+              fontSize: "42px",
+              fontWeight: "bold",
+              color: "#2563eb",
+            }}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {students.length}
+          </p>
+        )}
+      </div>
+
+      {/* Navigation Buttons */}
+      <div
+        style={{
+          display: "flex",
+          gap: "16px",
+          flexWrap: "wrap",
+          marginBottom: "35px",
+        }}
+      >
+        <Link
+          href="/students"
+          style={{
+            padding: "12px 20px",
+            backgroundColor: "#2563eb",
+            color: "#ffffff",
+            borderRadius: "6px",
+            textDecoration: "none",
+          }}
+        >
+          View Students
+        </Link>
+
+        <Link
+          href="/students/add"
+          style={{
+            padding: "12px 20px",
+            backgroundColor: "#16a34a",
+            color: "#ffffff",
+            borderRadius: "6px",
+            textDecoration: "none",
+          }}
+        >
+          Add Student
+        </Link>
+      </div>
+
+      {/* Student Details Section */}
+      <h2
+        style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+          color: "#111827",
+          marginBottom: "20px",
+        }}
+      >
+        Student Details
+      </h2>
+
+      {loading ? (
+        <p>Loading student details...</p>
+      ) : error ? (
+        <p role="alert" style={{ color: "#dc2626" }}>
+          {error}
+        </p>
+      ) : students.length === 0 ? (
+        <p>No students available.</p>
+      ) : (
+        <div
+          style={{
+            overflowX: "auto",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e5e7eb",
+            borderRadius: "10px",
+          }}
+        >
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+            }}
           >
-            Documentation
-          </a>
+            <thead>
+              <tr
+                style={{
+                  backgroundColor: "#f3f4f6",
+                }}
+              >
+                {[
+                  "Name",
+                  "Email",
+                  "Phone",
+                  "Department",
+                  "Year",
+                ].map((heading) => (
+                  <th
+                    key={heading}
+                    style={{
+                      ...cellStyle,
+                      fontWeight: 600,
+                    }}
+                  >
+                    {heading}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {students.map((student) => (
+                <tr key={student._id}>
+                  <td style={cellStyle}>
+                    {student.name}
+                  </td>
+
+                  <td style={cellStyle}>
+                    {student.email}
+                  </td>
+
+                  <td style={cellStyle}>
+                    {student.phone}
+                  </td>
+
+                  <td style={cellStyle}>
+                    {student.department}
+                  </td>
+
+                  <td style={cellStyle}>
+                    {student.year}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </main>
-    </div>
+      )}
+    </main>
   );
 }
